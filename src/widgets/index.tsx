@@ -1,72 +1,64 @@
 import { declareIndexPlugin, ReactRNPlugin } from "@remnote/plugin-sdk";
 
-/**
- * Simple example snippet plugin which shows how to:
- * - Register style settings
- * - Register Custom CSS
- * - Register a command
- *
- * How to Use:
- * - Tag a Rem with ##Plugin Style, or use the /Add Plugin Style command on a Rem
- * - The Rem will be styled with the CSS defined in the plugin
- */
+export const DIVIDER = "divider";
+
+let DividerCSS: string;
+
 async function onActivate(plugin: ReactRNPlugin) {
-  // Register a setting to change the Rem's text color
+  await fetch("https://raw.githubusercontent.com/browneyedsoul/RemNote-Divider/main/src/snippet.css")
+    .then((response) => response.text())
+    .then((text) => {
+      DividerCSS = text;
+      console.dir("Divider Installed!");
+    })
+    .catch((error) => console.error(error));
+  await plugin.app.registerCSS("rem-tree", DividerCSS);
+
   await plugin.settings.registerStringSetting({
     id: "color",
     title: "Text Color (hex)",
     description: "Provide a hex color for the text",
     defaultValue: "#ff0000",
   });
-
-  // Each time the setting changes, re-register the text color css.
+  await plugin.settings.registerStringSetting({
+    id: "height",
+    title: "Line Height (px)",
+    description: "Height of the Divider Area",
+    defaultValue: "10",
+  });
+  // Each time the setting changes, re-register the css.
   plugin.track(async (reactivePlugin) => {
     const color = await reactivePlugin.settings.getSetting("color");
     await reactivePlugin.app.registerCSS(
       "color",
-      `[data-rem-tags~="plugin-style"] { color: ${color}; }`
+      `
+      [data-rem-tags~="Divider"] {
+        color: ${color};
+      }
+      `
     );
   });
-
-  // Register a setting to change the Rem's margin
-  await plugin.settings.registerStringSetting({
-    id: "margin",
-    title: "Rem Margin (px)",
-    description: "Provide a margin for the Rem",
-    defaultValue: "10",
-  });
-
-  // Each time the margin setting changes, re-register the margin css.
   plugin.track(async (reactivePlugin) => {
-    const margin = await reactivePlugin.settings.getSetting<string>("margin");
+    const height = await reactivePlugin.settings.getSetting<string>("height");
     try {
-      const marginAsNumber = Number.parseInt(margin);
+      const heightAsNumber = Number.parseInt(height);
       await reactivePlugin.app.registerCSS(
-        "margin",
-        `[data-rem-tags~="plugin-style"] { margin: ${marginAsNumber}px; }`
+        "height",
+        `
+        [data-rem-tags~="Divider"] {
+          height: ${heightAsNumber}px;
+        }
+        `
       );
     } catch {}
   });
-
-  // A command that adds a style tag to the current focused Rem.
+  await plugin.app.registerPowerup("Divider", DIVIDER, "Rem Containing Horizontal Line", { slots: [] });
   await plugin.app.registerCommand({
-    id: "add-style-tag",
-    name: "Add Plugin Style",
-    description: "Add a style tag to the current focused Rem",
+    id: "divider",
+    name: "Divider",
     action: async () => {
-      const focusedRem = await plugin.focus.getFocusedRem();
-      if (!focusedRem) {
-        return;
-      }
-      let tag = await plugin.rem.findByName(["Plugin Style"], null);
-      if (!tag) {
-        tag = await plugin.rem.createRem();
-        if (!tag) {
-          return;
-        }
-        await tag.setText(["Plugin Style"]);
-      }
-      await focusedRem.addTag(tag);
+      const rem = await plugin.focus.getFocusedRem();
+      await rem?.addPowerup(DIVIDER);
     },
   });
 }

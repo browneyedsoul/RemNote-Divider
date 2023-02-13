@@ -1,0 +1,84 @@
+:root {
+    --dv-line: #DDD;
+    --dv-line-focused: #DCF3FF;
+    --dv-line-dark: #535353;
+    --dv-line-focused-dark: #576066;
+}
+
+@mixin divider(
+    $divider-line,
+    $divider-line-focused
+) {
+    [data-rem-container-tags~="divider"] {
+        margin-bottom: 0.5rem;
+        margin-left: 1.5rem;
+
+        > .tree-node--parent {
+            min-height: unset !important;
+        }
+
+        [data-rem-tags~="divider"] {
+            color: transparent;
+            height: 7px;
+            // Hide Elements
+                .pointer-events-none,
+                .RichTextViewer,
+                .rem-button__container,
+                .rem-container--focused,
+                .rem-bullet__icon,
+                .rem-bullet__container,
+                .rem-checkbox,
+                .rem:not([data-rem-tags~="show-tags"]) .hierarchy-editor__tag-bar,  // Hide Merge Sign
+                .float-end {	                            // Hide Placeholder "Type / for Commands"
+                    display: none;
+                }
+            &::before {
+                content: " ";
+                display: block;
+                position: absolute;
+                border-bottom: $divider-line;
+                left: 0;
+            }
+            &:focus-within {
+                background-color: $divider-line-focused;
+                position: relative;
+                top: 3px;
+                left: -0.2rem;
+
+                &::before {
+                    border-bottom: 2px solid $divider-line;
+                }
+            }
+            &:not(:focus-within) {
+                color: transparent;
+                position: relative;
+                padding: 0px 15px;
+                &::before {
+                    content: " ";
+                    display: block;
+                    position: absolute;
+                    width: 100%;
+                    top: 50%;
+                    border-bottom: 2px solid $divider-line;
+                    height: 2px;
+                }
+            }
+        }
+        .EditorContainer {
+            span {
+                visibility: hidden;
+            }
+        }
+    }
+}
+
+@include divider(
+    var(--dv-line),
+    var(--dv-line-focused)
+);
+.dark {
+    @include divider(
+        var(--dv-line-dark),
+        var(--dv-line-focused-dark)
+    );
+}
