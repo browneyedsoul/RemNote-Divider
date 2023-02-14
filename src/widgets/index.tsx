@@ -47,6 +47,7 @@ async function onActivate(plugin: ReactRNPlugin) {
     action: async () => {
       const rem = await plugin.focus.getFocusedRem();
       await rem?.addPowerup(DIVIDER);
+      await plugin.editor.insertPlainText("---");
     },
   });
 }
