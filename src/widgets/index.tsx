@@ -13,7 +13,7 @@ async function onActivate(plugin: ReactRNPlugin) {
   } catch (localError) {
     console.warn(`Failed to fetch local file: ${localError}. Falling back to remote URL.`);
     const remoteResponse = await fetch(
-      "https://raw.githubusercontent.com/browneyedsoul/RemNote-Divider/main/src/divider.css"
+      "https://raw.githubusercontent.com/browneyedsoul/RemNote-Divider/main/src/snippet.css"
     );
     const remoteCSS = await remoteResponse.text();
     DividerCSS = remoteCSS;
@@ -26,7 +26,7 @@ async function onActivate(plugin: ReactRNPlugin) {
     id: "height",
     title: "Line Height (px)",
     description: "Height of the Divider Area",
-    defaultValue: "",
+    defaultValue: "7",
   });
   plugin.track(async (reactivePlugin) => {
     const height = await reactivePlugin.settings.getSetting<string>("height");
