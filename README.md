@@ -2,7 +2,7 @@
 
 ## Demo
 
-![Demo](public/demo.png)
+![Demo](https://raw.githubusercontent.com/browneyedsoul/RemNote-Divider/main/public/logo.png)
 
 ## Usage
 
