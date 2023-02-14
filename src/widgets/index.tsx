@@ -28,7 +28,6 @@ async function onActivate(plugin: ReactRNPlugin) {
     description: "Height of the Divider Area",
     defaultValue: "",
   });
-  // Each time the setting changes, re-register the css.
   plugin.track(async (reactivePlugin) => {
     const height = await reactivePlugin.settings.getSetting<string>("height");
     const heightAsNumber = await Number.parseInt(height);
