@@ -1,8 +1,10 @@
 # RemNote Divider (Horizontal Line)
 
+![Logo](https://raw.githubusercontent.com/browneyedsoul/RemNote-Divider/main/public/logo.png)
+
 ## Demo
 
-![Demo](https://raw.githubusercontent.com/browneyedsoul/RemNote-Divider/main/public/logo.png)
+![Demo](https://raw.githubusercontent.com/browneyedsoul/RemNote-Divider/main/public/demo.png)
 
 ## Usage
 
