@@ -9,7 +9,7 @@
 ## Usage
 
 1. Focus on a Rem where you want to make a horizontal line
-2. Open the Omnibar (⌘+P) or Slash(/) Command
+2. Open the Omnibar (⌘+/) or Slash(/) Command
 3. Type `Divider` (di)
 4. Return(Enter)
 
