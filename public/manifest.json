@@ -6,7 +6,7 @@
   "repoUrl": "https://github.com/browneyedsoul/RemNote-Divider",
   "version": {
     "major": 0,
-    "minor": 2,
+    "minor": 3,
     "patch": 0
   },
   "theme": [],
@@ -16,7 +16,7 @@
   "requiredScopes": [
     {
       "type": "All",
-      "level": "ReadCreateModify"
+      "level": "ReadCreateModifyDelete"
     }
   ]
 }
