@@ -31,6 +31,9 @@
             .float-end {
                 display: none;
             }
+            > div {
+                width: 100%;
+            }
             &::before {
                 content: "";
                 display: block;
