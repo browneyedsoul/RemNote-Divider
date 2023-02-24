@@ -1,8 +1,10 @@
-import { declareIndexPlugin, ReactRNPlugin } from "@remnote/plugin-sdk";
+import { declareIndexPlugin, FocusEvents, ReactRNPlugin } from "@remnote/plugin-sdk";
+import { KeyboardEvent } from "react";
 
 export const DIVIDER = "divider";
 
 let DividerCSS: string;
+let DividerText = `---`;
 
 async function onActivate(plugin: ReactRNPlugin) {
   try {
@@ -19,7 +21,7 @@ async function onActivate(plugin: ReactRNPlugin) {
     DividerCSS = remoteCSS;
     console.dir("Divider Installed from CDN");
   }
-  
+
   await plugin.app.registerCSS("divider", DividerCSS);
 
   await plugin.settings.registerStringSetting({
@@ -41,15 +43,42 @@ async function onActivate(plugin: ReactRNPlugin) {
     );
   });
   await plugin.app.registerPowerup("Divider", DIVIDER, "Rem Containing Horizontal Line", { slots: [] });
+
   await plugin.app.registerCommand({
     id: "divider",
     name: "Divider",
     action: async () => {
       const rem = await plugin.focus.getFocusedRem();
-      await rem?.addPowerup(DIVIDER);
-      await plugin.editor.insertPlainText("---");
+      rem?.addPowerup(DIVIDER);
+      await plugin.editor.insertPlainText(DividerText);
     },
   });
+  await plugin.app.registerCommand({
+    id: "divider2",
+    name: "Remove Divider",
+    action: async () => {
+      const rem = await plugin.focus.getFocusedRem();
+      
+      await rem?.removePowerup(DIVIDER);
+      await plugin.editor.deleteCharacters(3, -1);
+      await plugin.editor.delete();
+    },
+  });
+  
+  // await plugin.event.addListener(
+  //   FocusEvents.FocusedRemChange,
+  //   undefined,
+  //   async (e: KeyboardEvent) => {
+  //     const focusedRem = await plugin.focus.getFocusedRem();
+  //     if (focusedRem?.hasPowerup(DIVIDER)) {
+  //       if (e.code === "Backspace" || e.code === "Delete") {
+  //         e.preventDefault();
+  //         await focusedRem?.removePowerup(DIVIDER);
+  //         await plugin.editor.delete();
+  //       }
+  //     }
+  //   }
+  // );
 }
 
 async function onDeactivate(_: ReactRNPlugin) {}

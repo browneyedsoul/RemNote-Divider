@@ -18,15 +18,17 @@
             border: unset !important;
         }
         [data-rem-tags~="divider"] {
+            display: flex !important;
+            align-items: center;
             color: transparent;
             height: 1rem;
+            // .rem-button__container,
+            // .rem-bullet__icon,
+            // .rem-bullet__container,
             .pointer-events-none,
-            .rem-button__container,
-            .rem-bullet__icon,
-            .rem-bullet__container,
             .rem-checkbox,
-            .rem:not([data-rem-tags~="show-tags"]) .hierarchy-editor__tag-bar,  // Hide Merge Sign
-            .float-end {	                            // Hide Placeholder "Type / for Commands"
+            .rem:not([data-rem-tags~="show-tags"]) .hierarchy-editor__tag-bar,
+            .float-end {
                 display: none;
             }
             &::before {
@@ -60,11 +62,11 @@
                 }
             }
         }
-        .EditorContainer {
-            span {
-                visibility: hidden;
-            }
-        }
+        // .EditorContainer {
+        //     span {
+        //         visibility: hidden;
+        //     }
+        // }
     }
 }
 
