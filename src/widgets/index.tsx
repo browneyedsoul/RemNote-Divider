@@ -1,5 +1,4 @@
 import { declareIndexPlugin, FocusEvents, ReactRNPlugin } from "@remnote/plugin-sdk";
-import { KeyboardEvent } from "react";
 
 export const DIVIDER = "divider";
 
@@ -44,41 +43,44 @@ async function onActivate(plugin: ReactRNPlugin) {
   });
   await plugin.app.registerPowerup("Divider", DIVIDER, "Rem Containing Horizontal Line", { slots: [] });
 
+  async function mkdiv() {
+    const rem = await plugin.focus.getFocusedRem();
+
+    if (await rem?.hasPowerup(DIVIDER) === true) {
+      rem?.removePowerup(DIVIDER);
+      await plugin.editor.moveCaret(99, 6);
+      await plugin.editor.deleteCharacters(99, -1);
+    } else {
+      rem?.addPowerup(DIVIDER);
+      await plugin.editor.moveCaret(99, 6);
+      await plugin.editor.deleteCharacters(99, -1);
+      await plugin.editor.insertPlainText(DividerText);
+      await plugin.editor.moveCaretVertical(1);
+    }
+  }
+
   await plugin.app.registerCommand({
     id: "divider",
     name: "Divider",
     action: async () => {
-      const rem = await plugin.focus.getFocusedRem();
-      rem?.addPowerup(DIVIDER);
-      await plugin.editor.insertPlainText(DividerText);
+      await mkdiv();
     },
   });
-  await plugin.app.registerCommand({
-    id: "divider2",
-    name: "Remove Divider",
-    action: async () => {
-      const rem = await plugin.focus.getFocusedRem();
-      
-      await rem?.removePowerup(DIVIDER);
-      await plugin.editor.deleteCharacters(3, -1);
-      await plugin.editor.delete();
-    },
-  });
-  
-  // await plugin.event.addListener(
-  //   FocusEvents.FocusedRemChange,
-  //   undefined,
-  //   async (e: KeyboardEvent) => {
-  //     const focusedRem = await plugin.focus.getFocusedRem();
-  //     if (focusedRem?.hasPowerup(DIVIDER)) {
-  //       if (e.code === "Backspace" || e.code === "Delete") {
-  //         e.preventDefault();
-  //         await focusedRem?.removePowerup(DIVIDER);
-  //         await plugin.editor.delete();
-  //       }
-  //     }
-  //   }
-  // );
+  await plugin.event.addListener(
+    FocusEvents.FocusedRemChange,
+    undefined,
+    async (e: KeyboardEvent) => {
+      const focusedRem = await plugin.focus.getFocusedRem();
+
+      if (await focusedRem?.hasPowerup(DIVIDER) === true) {
+        if (await  e.code === "Backspace" || e.code === "Delete") {
+          e.preventDefault();
+          await focusedRem?.removePowerup(DIVIDER);
+          await plugin.editor.delete();
+        }
+      }
+    }
+  );
 }
 
 async function onDeactivate(_: ReactRNPlugin) {}
