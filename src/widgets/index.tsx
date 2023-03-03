@@ -62,6 +62,8 @@ async function onActivate(plugin: ReactRNPlugin) {
   await plugin.app.registerCommand({
     id: "divider",
     name: "Divider",
+    quickCode: "dv",
+    keyboardShortcut: "ctrl+shift+d",
     action: async () => {
       await mkdiv();
     },
@@ -73,7 +75,7 @@ async function onActivate(plugin: ReactRNPlugin) {
       const focusedRem = await plugin.focus.getFocusedRem();
 
       if (await focusedRem?.hasPowerup(DIVIDER) === true) {
-        if (await  e.code === "Backspace" || e.code === "Delete") {
+        if (await  e.key === "Backspace" || e.key === "Delete") {
           e.preventDefault();
           await focusedRem?.removePowerup(DIVIDER);
           await plugin.editor.delete();
