@@ -11,6 +11,7 @@ async function onActivate(plugin: ReactRNPlugin) {
     const localCSS = await localResponse.text();
     DividerCSS = localCSS;
     console.dir("Divider Installed from local path!");
+    await plugin.app.registerCSS("divider", DividerCSS);
   } catch (localError) {
     console.warn(`Failed to fetch local file: ${localError}. Falling back to remote URL.`);
     const remoteResponse = await fetch(
@@ -19,9 +20,8 @@ async function onActivate(plugin: ReactRNPlugin) {
     const remoteCSS = await remoteResponse.text();
     DividerCSS = remoteCSS;
     console.dir("Divider Installed from CDN");
+    await plugin.app.registerCSS("divider", DividerCSS);
   }
-
-  await plugin.app.registerCSS("divider", DividerCSS);
 
   await plugin.settings.registerStringSetting({
     id: "height",
