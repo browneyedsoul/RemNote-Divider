@@ -7,11 +7,11 @@
   "version": {
     "major": 0,
     "minor": 4,
-    "patch": 0
+    "patch": 1
   },
   "theme": [],
   "enableOnMobile": true,
-  "description": "Make a Rem for Segmentating Paragraphs",
+  "description": "A Rem for Dividing Paragraphs into Segments",
   "requestNative": true,
   "requiredScopes": [
     {
