@@ -7,20 +7,21 @@ let DividerText = `---`;
 
 async function onActivate(plugin: ReactRNPlugin) {
   try {
-    const localResponse = await fetch("snippet.css");
-    const localCSS = await localResponse.text();
-    DividerCSS = localCSS;
-    console.dir("Divider Installed from local path!");
-    await plugin.app.registerCSS("divider", DividerCSS);
+    await fetch("snippet.css")
+      .then((response) => response.text())
+      .then((text) => {
+        DividerCSS = text;
+        console.dir("Divider Installed from local");
+      })
+      .catch((error) => console.error(error));
   } catch (localError) {
-    console.warn(`Failed to fetch local file: ${localError}. Falling back to remote URL.`);
-    const remoteResponse = await fetch(
-      "https://raw.githubusercontent.com/browneyedsoul/RemNote-Divider/main/src/snippet.css"
-    );
-    const remoteCSS = await remoteResponse.text();
-    DividerCSS = remoteCSS;
-    console.dir("Divider Installed from CDN");
-    await plugin.app.registerCSS("divider", DividerCSS);
+    await fetch("https://raw.githubusercontent.com/browneyedsoul/RemNote-Divider/main/src/snippet.css")
+      .then((response) => response.text())
+      .then((text) => {
+        DividerCSS = text;
+        console.dir("Divider Installed from CDN");
+      })
+      .catch((error) => console.error(error));
   }
 
   await plugin.settings.registerStringSetting({
