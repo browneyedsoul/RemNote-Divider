@@ -2,12 +2,12 @@
   "manifestVersion": 1,
   "id": "divider",
   "name": "Divider",
-  "author": "Min-KI Park",
+  "author": "Min-Ki Park",
   "repoUrl": "https://github.com/browneyedsoul/RemNote-Divider",
   "version": {
     "major": 0,
     "minor": 4,
-    "patch": 3
+    "patch": 4
   },
   "theme": [],
   "enableOnMobile": true,
