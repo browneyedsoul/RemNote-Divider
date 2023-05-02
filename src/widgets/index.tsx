@@ -1,4 +1,4 @@
-import { declareIndexPlugin, FocusEvents, ReactRNPlugin } from "@remnote/plugin-sdk";
+import { declareIndexPlugin, ReactRNPlugin } from "@remnote/plugin-sdk";
 
 export const DIVIDER = "divider";
 
@@ -7,22 +7,23 @@ let DividerText = `---`;
 
 async function onActivate(plugin: ReactRNPlugin) {
   try {
-    await fetch("snippet.css")
-      .then((response) => response.text())
-      .then((text) => {
-        DividerCSS = text;
-        console.dir("Divider Installed from local");
-      })
-      .catch((error) => console.error(error));
-  } catch (localError) {
-    await fetch("https://raw.githubusercontent.com/browneyedsoul/RemNote-Divider/main/src/snippet.css")
-      .then((response) => response.text())
-      .then((text) => {
-        DividerCSS = text;
-        console.dir("Divider Installed from CDN");
-      })
-      .catch((error) => console.error(error));
+    const response = await fetch("snippet.css");
+    const text = await response.text();
+    DividerCSS = text;
+    console.log("Divider Installed from local");
+  } catch (error) {
+    try {
+      const response = await fetch(
+        "https://raw.githubusercontent.com/browneyedsoul/RemNote-Divider/main/src/snippet.css"
+      );
+      const text = await response.text();
+      DividerCSS = text;
+      console.log("Divider Installed from CDN");
+    } catch (error) {
+      console.error(error);
+    }
   }
+
 
   await plugin.settings.registerStringSetting({
     id: "height",
@@ -44,6 +45,11 @@ async function onActivate(plugin: ReactRNPlugin) {
   });
   await plugin.app.registerPowerup("Divider", DIVIDER, "Rem Containing Horizontal Line", { slots: [] });
 
+  // TODO 
+  await plugin.app.registerCallback("delete with keystroke", () => {
+
+  });
+
   async function mkdiv() {
     const rem = await plugin.focus.getFocusedRem();
 
@@ -56,7 +62,6 @@ async function onActivate(plugin: ReactRNPlugin) {
       await plugin.editor.moveCaret(99, 6);
       await plugin.editor.deleteCharacters(99, -1);
       await plugin.editor.insertPlainText(DividerText);
-      await plugin.editor.moveCaretVertical(1);
     }
   }
 
@@ -69,21 +74,6 @@ async function onActivate(plugin: ReactRNPlugin) {
       await mkdiv();
     },
   });
-  await plugin.event.addListener(
-    FocusEvents.FocusedRemChange,
-    undefined,
-    async (e: KeyboardEvent) => {
-      const focusedRem = await plugin.focus.getFocusedRem();
-
-      if (await focusedRem?.hasPowerup(DIVIDER) === true) {
-        if (await  e.key === "Backspace" || e.key === "Delete") {
-          e.preventDefault();
-          await focusedRem?.removePowerup(DIVIDER);
-          await plugin.editor.delete();
-        }
-      }
-    }
-  );
 }
 
 async function onDeactivate(_: ReactRNPlugin) {}
